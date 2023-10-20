@@ -10,13 +10,13 @@ const api = axios.create({
 });
 
 const getAuthHeaders = () => {
-    console.log('getToken():', getToken());
     return {
         'Authorization': `Bearer ${getToken()}`
     };
 };
 
 export const createArea = async (name) => {
+    console.log('createArea name:', name)
     try {
         const response = await api.post('', {
             operation: 'create_area',
@@ -52,17 +52,20 @@ export const updateArea = async (id, name) => {
 };
 
 export const deleteArea = async (id) => {
+    let response = null;
     try {
-        const response = await api.post('', {
+        response = await api.post('', {
             operation: 'delete_area',
             payload: { id }
         }, {
             headers: getAuthHeaders()
         });
-        return response.data;
+        if (response.status !== 200) {
+            return response.data;
+        }
+        return true;
     } catch (error) {
-        console.error('Error deleting area:', error);
-        throw error;
+        console.error('Error deleting area:', response);
     }
 };
 
@@ -72,7 +75,6 @@ export const getAreas = async () => {
             operation: 'list_areas',
             payload: {}
         });
-        console.log('response:', response)
         if (response.status !== 200) {
             throw new Error('Failed to fetch areas');
         }

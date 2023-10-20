@@ -4,10 +4,17 @@ import { deleteArea } from '../../services/areaServices';
 function AreaDelete({ area, onDeleted }) {
   const handleDelete = async () => {
     try {
-      await deleteArea(area.id);
-      onDeleted();
+      const response = await deleteArea(area.id);
+      if (response === true) {
+        onDeleted(area);
+        window.location.reload();
+      }else{
+        response.json().then((data) => {
+          alert(data.message);
+        });
+      }
     } catch (error) {
-      console.error('Error deleting area:', error);
+      window.alert('Error deleting area: make sure there are no employees in the area');
     }
   };
 

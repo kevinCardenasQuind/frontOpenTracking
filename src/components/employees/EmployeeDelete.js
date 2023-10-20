@@ -9,6 +9,7 @@ function EmployeeDelete({ employee, onDeleted }) {
     } catch (error) {
       console.error('Error deleting employee:', error);
     }
+    window.location.reload();
   };
 
   return (
