@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { getAreas } from '../../services/areaServices';
+import React, { useEffect, useState } from "react";
+import { getAreas } from "../../services/areaServices";
+import {
+  Button,
+  Provider,
+  defaultTheme,
+  Heading,
+} from "@adobe/react-spectrum";
 
 function AreaList({ onSelect }) {
   const [areas, setAreas] = useState([]);
@@ -10,7 +16,7 @@ function AreaList({ onSelect }) {
         const data = await getAreas();
         setAreas(data);
       } catch (error) {
-        console.error('Error fetching areas:', error);
+        console.error("Error fetching areas:", error);
       }
     }
 
@@ -18,17 +24,21 @@ function AreaList({ onSelect }) {
   }, []);
 
   return (
-    <div>
-      <h2>Area List</h2>
-      <ul>
-        {areas.map(area => (
-          <li key={area.id}>
-            {area.name}
-            <button onClick={() => onSelect(area)}>View</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Provider theme={defaultTheme}>
+      <div>
+        <Heading level={2}>Area List</Heading>
+        <ul>
+          {areas.map((area) => (
+            <li key={area.id}>
+              {area.name}
+              <Button variant="cta" onPress={() => onSelect(area)}>
+                View
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Provider>
   );
 }
 

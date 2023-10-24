@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from './authService';
 
 const api = axios.create({
-    baseURL: 'http://localhost:3000/dev/area',
+    baseURL: process.env.REACT_APP_BASE_URL + '/area',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${getToken()}`
@@ -74,6 +74,22 @@ export const getAreas = async () => {
         const response = await api.post('', {
             operation: 'list_areas',
             payload: {}
+        });
+        if (response.status !== 200) {
+            throw new Error('Failed to fetch areas');
+        }
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching areas:', error);
+        throw error;
+    }
+};
+
+export const getArea = async (id) => {
+    try {
+        const response = await api.post('', {
+            operation: 'get_area',
+            payload: {id}
         });
         if (response.status !== 200) {
             throw new Error('Failed to fetch areas');

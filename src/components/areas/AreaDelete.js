@@ -1,29 +1,37 @@
 import React from 'react';
 import { deleteArea } from '../../services/areaServices';
+import { Button, Dialog, DialogTrigger, Heading, Text, Provider, defaultTheme, Flex } from '@adobe/react-spectrum';
 
 function AreaDelete({ area, onDeleted }) {
+
   const handleDelete = async () => {
     try {
-      const response = await deleteArea(area.id);
-      if (response === true) {
-        onDeleted(area);
-        window.location.reload();
-      }else{
-        response.json().then((data) => {
-          alert(data.message);
-        });
-      }
+      await deleteArea(area.id);
+      onDeleted();
+      window.location.reload();
     } catch (error) {
-      window.alert('Error deleting area: make sure there are no employees in the area');
+      console.error('Error deleting area:', error);
     }
   };
 
   return (
-    <div>
-      <h2>Delete Area</h2>
-      <p>Are you sure you want to delete {area.name}?</p>
-      <button onClick={handleDelete}>Delete</button>
-    </div>
+    <Provider theme={defaultTheme}>
+        <DialogTrigger>
+            <Button variant="negative">Delete</Button>
+            {(close) => (
+                <Dialog>
+                    <Heading>Delete {area.name}?</Heading>
+                    <Flex direction="column" justify-content="space-between">
+                        <Text></Text>
+                        <Flex>
+                            <Button variant="secondary" onPress={close}>Cancel</Button>
+                            <Button variant="cta" onPress={() => { handleDelete(); close(); }}>Delete</Button>
+                        </Flex>
+                    </Flex>
+                </Dialog>
+            )}
+        </DialogTrigger>
+    </Provider>
   );
 }
 

@@ -1,75 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { createEmployee, updateEmployee } from '../../services/employeeServices';
+import { createEmployee, updateEmployee, getEmployee } from '../../services/employeeServices';
 import { getAreas } from '../../services/areaServices';
-import EmployeeList from './EmployeeList';
+import { useParams } from 'react-router-dom';
+import { TextField, Button, Form, Provider, defaultTheme } from '@adobe/react-spectrum';
 
-function EmployeeForm({ onSubmit, initialData }) {
+function EmployeeForm() {
+  const { id } = useParams();
   const [name, setName] = useState('');
   const [cedula, setCedula] = useState('');
   const [areaId, setAreaId] = useState('');
   const [areas, setAreas] = useState([]);
 
   useEffect(() => {
-    if (initialData) {
-      setName(initialData.Name);
-      setCedula(initialData.cedula);
-      setAreaId(initialData.area_id);
-    }
-
-    async function fetchAreas() {
+    async function fetchEmployeeAndAreas() {
       try {
         const areaData = await getAreas();
         setAreas(areaData);
+        if (id) {
+          const employeeData = await getEmployee(id);
+          setName(employeeData.Name);
+          setCedula(employeeData.cedula);
+          setAreaId(employeeData.area_id);
+        }
       } catch (error) {
-        console.error('Error fetching areas:', error);
+        console.error('Error fetching data:', error);
       }
     }
 
-    fetchAreas();
-  }, [initialData]);
+    fetchEmployeeAndAreas();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const employee = { cedula, Name: name, area_id: areaId };
     try {
-      let data;
-      if (initialData) {
-        data = await updateEmployee(employee);
+      if (id) {
+        await updateEmployee(employee);
       } else {
-        data = await createEmployee(employee);
+        await createEmployee(employee);
       }
-      onSubmit(data);
     } catch (error) {
-      console.error(`Error ${initialData ? 'updating' : 'creating'} employee:`, error);
+      console.error(`Error ${id ? 'updating' : 'creating'} employee:`, error);
     }
-    window.location.reload(EmployeeList);
+    window.location.reload();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Cedula"
-        value={cedula}
-        onChange={(e) => setCedula(e.target.value)}
-      />
-      <select
-        value={areaId}
-        onChange={(e) => setAreaId(e.target.value)}
-      >
-        <option value="" disabled>Select Area</option>
-        {areas.map(area => (
-          <option key={area.id} value={area.id}>{area.name}</option>
-        ))}
-      </select>
-      <button type="submit">{initialData ? 'Update Employee' : 'Create Employee'}</button>
-    </form>
+    <Provider theme={defaultTheme}>
+      <Form onSubmit={handleSubmit} maxWidth="size-4800">
+        <TextField
+          label="Name"
+          value={name}
+          onChange={setName}
+        />
+        <TextField
+          label="Cedula"
+          value={cedula}
+          onChange={setCedula}
+        />
+        <select
+          value={areaId}
+          onChange={(e) => setAreaId(e.target.value)}
+        >
+          <option value="" disabled>Select Area</option>
+          {areas.map(area => (
+            <option key={area.id} value={area.id}>{area.name}</option>
+          ))}
+        </select>
+        <Button type="submit" variant="cta">
+          {id ? 'Update Employee' : 'Create Employee'}
+        </Button>
+      </Form>
+    </Provider>
   );
 }
 

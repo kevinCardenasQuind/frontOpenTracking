@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { authenticate } from '../../services/authService';
+import { Button, TextField, Provider, defaultTheme, Flex, Text } from '@adobe/react-spectrum';
 
 function Login() {
   const [userName, setUserName] = useState('');
@@ -17,25 +18,33 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
-      {error && <div className="error">{error}</div>}
-    </div>
+    <Provider theme={defaultTheme}>
+      <Flex direction="column" gap="size-100" alignItems="center" padding="size-200">
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            type="text"
+            placeholder="Username"
+            value={userName}
+            onInput={(e) => setUserName(e.target.value)}
+          />
+          <TextField
+            type="password"
+            placeholder="Password"
+            value={password}
+            onInput={(e) => setPassword(e.target.value)}
+          />
+          <Button type="submit" variant="cta">
+            Login
+          </Button>
+        </form>
+        {error && (
+          <Text UNSAFE_style={{ color: 'red' }}>
+            {error}
+          </Text>
+        )}
+        </Flex>
+    </Provider>
   );
 }
 

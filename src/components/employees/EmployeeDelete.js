@@ -1,4 +1,4 @@
-import React from 'react';
+import { Button, Dialog, DialogTrigger, Heading, Provider, defaultTheme, Flex, Text } from '@adobe/react-spectrum';
 import { deleteEmployee } from '../../services/employeeServices';
 
 function EmployeeDelete({ employee, onDeleted }) {
@@ -6,18 +6,30 @@ function EmployeeDelete({ employee, onDeleted }) {
     try {
       await deleteEmployee(employee.cedula);
       onDeleted(employee);
+      window.location.reload();
     } catch (error) {
       console.error('Error deleting employee:', error);
     }
-    window.location.reload();
   };
 
   return (
-    <div>
-      <h2>Delete Employee</h2>
-      <p>Are you sure you want to delete {employee.Name}?</p>
-      <button onClick={handleDelete}>Delete</button>
-    </div>
+    <Provider theme={defaultTheme}>
+      <DialogTrigger>
+        <Button variant="negative">Delete</Button>
+        {(close) => (
+          <Dialog>
+          <Heading>Delete {employee.Name}?</Heading>
+            <Flex direction="column" justify-content="space-between">
+                <Text></Text>
+                <Flex justifyContent="">
+                    <Button variant="secondary" onPress={close}>Cancel</Button>
+                    <Button variant="cta" onPress={() => { handleDelete(); close(); }}>Delete</Button>
+                </Flex>
+            </Flex>
+          </Dialog>
+        )}
+      </DialogTrigger>
+    </Provider>
   );
 }
 

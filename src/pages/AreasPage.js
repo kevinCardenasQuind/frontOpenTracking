@@ -4,6 +4,7 @@ import AreaList from "../components/areas/AreaList";
 import AreaForm from "../components/areas/AreaForm";
 import AreaDelete from "../components/areas/AreaDelete";
 import { createArea, updateArea } from "../services/areaServices";
+import { Provider, defaultTheme, Flex, Heading } from '@adobe/react-spectrum';
 
 function AreasPage() {
   const [selectedArea, setSelectedArea] = useState(null);
@@ -44,26 +45,26 @@ function AreasPage() {
   };
 
   return (
-    <div>
-      <h1>Area Administration</h1>
-      <AreaForm
-        area={isEditing ? selectedArea : null}
-        onSaved={handleFormSubmit}
-      />
-      <AreaList onSelect={handleAreaSelect} />
-      {selectedArea && !isDeleting && !isEditing && (
-        <div>
-          <AreaDetail
-            area={selectedArea}
-            onEdit={handleEditClick}
-            onDelete={handleDeleteClick}
-          />
-        </div>
-      )}
-      {selectedArea && isDeleting && (
-        <AreaDelete area={selectedArea} onDeleted={handleAreaDeleted} />
-      )}
-    </div>
+    <Provider theme={defaultTheme}>
+        <Flex direction="column" gap="size-100">
+            <Heading level={1}>Area Administration</Heading>
+            <AreaForm
+                area={isEditing ? selectedArea : null}
+                onSaved={handleFormSubmit}
+            />
+            <AreaList onSelect={handleAreaSelect} />
+            {selectedArea && !isDeleting && !isEditing && (
+                <AreaDetail
+                    area={selectedArea}
+                    onEdit={handleEditClick}
+                    onDelete={handleDeleteClick}
+                />
+            )}
+            {selectedArea && isDeleting && (
+                <AreaDelete area={selectedArea} onDeleted={handleAreaDeleted} />
+            )}
+        </Flex>
+    </Provider>
   );
 }
 

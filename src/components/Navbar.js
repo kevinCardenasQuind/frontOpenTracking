@@ -1,34 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { isUserLogged } from '../services/authService';
+import { Provider, defaultTheme, Button } from '@adobe/react-spectrum';
 
 function Navbar() {
-  const is_logged_in = isUserLogged() === 'true';  // Convertir a boolean
+  const is_logged_in = isUserLogged() === 'true';
   return (
-    <nav>
-      {is_logged_in ? (
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/teams">Areas</Link>
-          </li>
-          <li>
-            <Link to="/employees">Employees</Link>
-          </li>
-          <li>
-            <Link to="/logout">Logout</Link>
-          </li>
-        </ul>
-      ) : (
-        <ul>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-        </ul>
-      )}
-    </nav>
+    <Provider theme={defaultTheme}>
+      <nav>
+        {is_logged_in ? (
+          <>
+            <Button variant="primary"><Link to="/">Home</Link></Button>
+            <Button variant="primary"><Link to="/teams">Areas</Link></Button>
+            <Button variant="primary"><Link to="/employees">Employees</Link></Button>
+            <Button variant="primary"><Link to="/logout">Logout</Link></Button>
+          </>
+        ) : (
+          <Button variant="primary"><Link to="/login">Login</Link></Button>
+        )}
+      </nav>
+    </Provider>
   );
 }
 
