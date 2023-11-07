@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
         localStorage.setItem('Token', token);
         localStorage.setItem('isLoggedIn', 'true');
 
-        navigate('/home');
+        navigate('/');
         window.location.reload();
       } catch (error) {
         console.error(error);

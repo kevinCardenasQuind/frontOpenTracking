@@ -7,7 +7,7 @@ const LogoutPage: React.FC = () => {
 
   useEffect(() => {
     authService.logout();
-    navigate('/login');
+    navigate('/');
     window.location.reload();
   }, [navigate]);
 
