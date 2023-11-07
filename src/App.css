@@ -1,0 +1,14 @@
+.App {
+  background-color: #FFD700;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.wrapper {
+  height: calc(100vh - 50px);
+  overflow-y: auto;
+  background-color: #ffffff;
+}

@@ -1,0 +1,10 @@
+.title {
+    background-color: #FFD700;
+    color: black;
+    text-align: center;
+}
+
+.actions {
+    justify-content: center;
+    align-items: center;
+}
